@@ -1,43 +1,53 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
+	"net/http"
 	"os"
-
-	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
-func main() {
-	godotenv.Load()
+type HealthResponse struct {
+	Status  string `json:"status"`
+	Service string `json:"service"`
+	Version string `json:"version"`
+}
 
+type APIResponse struct {
+	Status string                 `json:"status"`
+	Data   map[string]interface{} `json:"data"`
+}
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(HealthResponse{
+		Status:  "healthy",
+		Service: "friendapp-go-services",
+		Version: "1.0.0",
+	})
+}
+
+func metricsHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(APIResponse{
+		Status: "success",
+		Data: map[string]interface{}{
+			"message": "Performance metrics endpoint - to be implemented",
+		},
+	})
+}
+
+func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "9000"
 	}
 
-	r := gin.Default()
-
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"status":  "healthy",
-			"service": "friendapp-go-services",
-			"version": "1.0.0",
-		})
-	})
-
-	api := r.Group("/api/v1")
-	{
-		api.GET("/performance/metrics", func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"status": "success",
-				"data": gin.H{
-					"message": "Performance metrics endpoint - to be implemented",
-				},
-			})
-		})
-	}
+	http.HandleFunc("/health", healthHandler)
+	http.HandleFunc("/api/v1/performance/metrics", metricsHandler)
 
 	log.Printf("FriendApp Go Services running on port %s", port)
-	r.Run(":" + port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

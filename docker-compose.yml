@@ -96,8 +96,6 @@ services:
       PORT: 9000
     ports:
       - "9000:9000"
-    volumes:
-      - ./backend/go-services:/app
     depends_on:
       postgres:
         condition: service_healthy
@@ -105,7 +103,6 @@ services:
         condition: service_healthy
     networks:
       - friendapp-network
-    command: air
 
 volumes:
   postgres_data:
