@@ -1,0 +1,32 @@
+{
+  "name": "friendapp-core",
+  "version": "1.0.0",
+  "description": "FriendApp - Plataforma social com IA, mapa de frequência e módulos vibracionais",
+  "private": true,
+  "workspaces": [
+    "backend/node-api",
+    "frontend/flutter-app"
+  ],
+  "scripts": {
+    "dev": "docker-compose up -d",
+    "dev:logs": "docker-compose logs -f",
+    "dev:down": "docker-compose down",
+    "dev:clean": "docker-compose down -v",
+    "node-api": "cd backend/node-api && npm run dev",
+    "python-ai": "cd backend/python-ai && poetry run uvicorn main:app --reload",
+    "go-services": "cd backend/go-services && air",
+    "flutter:web": "cd frontend/flutter-app && flutter run -d chrome",
+    "flutter:mobile": "cd frontend/flutter-app && flutter run",
+    "db:migrate": "cd backend/node-api && npm run migrate",
+    "db:seed": "cd backend/node-api && npm run seed"
+  },
+  "keywords": [
+    "friendapp",
+    "social",
+    "ai",
+    "frequency-map",
+    "vibrational"
+  ],
+  "author": "Thayssa Gomes",
+  "license": "PROPRIETARY"
+}

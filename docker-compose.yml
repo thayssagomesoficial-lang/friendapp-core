@@ -1,0 +1,117 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: friendapp-postgres
+    environment:
+      POSTGRES_DB: friendapp
+      POSTGRES_USER: friendapp
+      POSTGRES_PASSWORD: friendapp_dev_2024
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - friendapp-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U friendapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: friendapp-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - friendapp-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  node-api:
+    build:
+      context: ./backend/node-api
+      dockerfile: Dockerfile
+    container_name: friendapp-node-api
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://friendapp:friendapp_dev_2024@postgres:5432/friendapp
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: dev_jwt_secret_change_in_production
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/node-api:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - friendapp-network
+    command: npm run dev
+
+  python-ai:
+    build:
+      context: ./backend/python-ai
+      dockerfile: Dockerfile
+    container_name: friendapp-python-ai
+    environment:
+      PYTHONUNBUFFERED: 1
+      DATABASE_URL: postgresql://friendapp:friendapp_dev_2024@postgres:5432/friendapp
+      REDIS_URL: redis://redis:6379
+      MODEL_PATH: /app/models
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/python-ai:/app
+      - ai_models:/app/models
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - friendapp-network
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  go-services:
+    build:
+      context: ./backend/go-services
+      dockerfile: Dockerfile
+    container_name: friendapp-go-services
+    environment:
+      DATABASE_URL: postgresql://friendapp:friendapp_dev_2024@postgres:5432/friendapp
+      REDIS_URL: redis://redis:6379
+      PORT: 9000
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./backend/go-services:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - friendapp-network
+    command: air
+
+volumes:
+  postgres_data:
+  redis_data:
+  ai_models:
+
+networks:
+  friendapp-network:
+    driver: bridge
