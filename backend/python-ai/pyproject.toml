@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "friendapp-python-ai"
+version = "1.0.0"
+description = "FriendApp Python AI Service - IA Aurah Kosmos e processamento de NLP"
+authors = ["Thayssa Gomes <thayssa.gomes.oficial@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.109.0"
+uvicorn = {extras = ["standard"], version = "^0.27.0"}
+pydantic = "^2.5.3"
+python-dotenv = "^1.0.0"
+sqlalchemy = "^2.0.25"
+asyncpg = "^0.29.0"
+redis = "^5.0.1"
+numpy = "^1.26.3"
+scikit-learn = "^1.4.0"
+nltk = "^3.8.1"
+transformers = "^4.36.2"
+torch = "^2.1.2"
+sentence-transformers = "^2.2.2"
+httpx = "^0.26.0"
+psycopg2-binary = "^2.9.9"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.4.4"
+black = "^23.12.1"
+flake8 = "^7.0.0"
+mypy = "^1.8.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
