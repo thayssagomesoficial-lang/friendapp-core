@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import '../../providers/feed_provider.dart';
 import '../../models/post_model.dart';
 
@@ -101,11 +100,12 @@ class _FeedScreenState extends State<FeedScreen> {
               onPressed: () async {
                 if (contentController.text.trim().isNotEmpty) {
                   final feedProvider = Provider.of<FeedProvider>(context, listen: false);
+                  final navigator = Navigator.of(context);
                   await feedProvider.createPost(
                     content: contentController.text.trim(),
                     emotionTone: selectedEmotion,
                   );
-                  Navigator.of(context).pop();
+                  navigator.pop();
                 }
               },
               child: const Text('Publicar'),

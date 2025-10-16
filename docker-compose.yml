@@ -91,8 +91,13 @@ services:
       dockerfile: Dockerfile
     container_name: friendapp-go-services
     environment:
-      DATABASE_URL: postgresql://friendapp:friendapp_dev_2024@postgres:5432/friendapp
-      REDIS_URL: redis://redis:6379
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: friendapp
+      DB_PASSWORD: friendapp_dev_2024
+      DB_NAME: friendapp
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       PORT: 9000
     ports:
       - "9000:9000"
@@ -103,6 +108,7 @@ services:
         condition: service_healthy
     networks:
       - friendapp-network
+    command: /root/server
 
 volumes:
   postgres_data:
