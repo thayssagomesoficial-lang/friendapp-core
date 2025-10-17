@@ -2,11 +2,32 @@
 
 [![Status](https://img.shields.io/badge/status-active_development-brightgreen)]()
 [![Documentation](https://img.shields.io/badge/docs-comprehensive-blue)]()
-[![Modules](https://img.shields.io/badge/modules-11-purple)]()
+[![Modules](https://img.shields.io/badge/modules-14-purple)]()
+[![Architecture](https://img.shields.io/badge/architecture-4_layers-orange)]()
 
 ## 🎯 Visão Geral
 
 FriendApp é uma **plataforma social revolucionária** que utiliza **compatibilidade vibracional** e **inteligência artificial avançada** para criar conexões humanas autênticas e profundas. Diferente das redes sociais tradicionais focadas em engajamento superficial, o FriendApp prioriza **intenção consciente**, **energia compatível** e **crescimento evolutivo**.
+
+### Arquitetura em 4 Camadas
+
+```
+┌─── CAMADA 4: ACOLHIMENTO ─────────────────────────┐
+│   Suporte ao Usuário (Jornada + Comunidade)      │
+└────────────────────────────────────────────────────┘
+                       ↓
+┌─── CAMADA 3: FUNCIONALIDADES (11 Módulos) ────────┐
+│   Chat, Eventos, Locais, Viagem, Feed, etc.       │
+└────────────────────────────────────────────────────┘
+                       ↓
+┌─── CAMADA 2: OTIMIZAÇÃO ──────────────────────────┐
+│   IA Operacional (Recomendação + Performance)     │
+└────────────────────────────────────────────────────┘
+                       ↓
+┌─── CAMADA 1: INFRAESTRUTURA ──────────────────────┐
+│   Multi-cloud + Kubernetes + Kafka + Failover     │
+└────────────────────────────────────────────────────┘
+```
 
 ### Diferenciais Únicos
 - 🧠 **IA Aurah Kosmos** com 76 camadas de processamento multidimensional
@@ -33,7 +54,7 @@ FriendApp é uma **plataforma social revolucionária** que utiliza **compatibili
 | 6 | Jogo da Transmutação | ✅ Ativo | [Docs](./docs/resumos/jogo-transmutacao.md) |
 | 7 | Mapa de Frequência | ✅ Ativo | [Docs](./docs/resumos/mapa-frequencia.md) |
 
-### Novos Módulos (Recém Integrados)
+### Módulos Verticais (Funcionalidades)
 
 | # | Módulo | Status | Documentação |
 |---|--------|--------|--------------|
@@ -42,7 +63,15 @@ FriendApp é uma **plataforma social revolucionária** que utiliza **compatibili
 | 10 | Sistema de Locais Parceiros B2B | ⭐ Planejado | [Docs](./docs/resumos/sistema-locais-parceiros.md) |
 | 11 | Sistema de Conexões Reais (Viagem + Bora) | ⭐ Planejado | [Docs](./docs/resumos/sistema-conexoes-reais.md) |
 
-**Total:** 11 módulos técnicos documentados
+### Módulos Horizontais (Camadas Transversais) ⭐ NOVO
+
+| # | Módulo | Status | Documentação |
+|---|--------|--------|--------------|
+| 12 | Arquitetura Tecnológica e Infraestrutura | ⭐ Base Crítica | [Docs](./docs/resumos/arquitetura-tecnologica-infraestrutura.md) |
+| 13 | Inteligência Artificial Operacional | ⭐ Otimização | [Docs](./docs/resumos/ia-operacional.md) |
+| 14 | Suporte ao Usuário | ⭐ Acolhimento | [Docs](./docs/resumos/suporte-usuario.md) |
+
+**Total:** 14 módulos (11 verticais + 3 horizontais)
 
 ---
 
@@ -68,13 +97,16 @@ Go (WebSocket & Geolocalização)
 | **Redis** | Cache e estados temporários |
 | **ElasticSearch** | Busca e indexação vetorial |
 
-### Infraestrutura
+### Infraestrutura (Módulo 12)
 
-- **Container:** Docker + Kubernetes (GKE/EKS)
-- **Cloud:** Multi-cloud (AWS + GCP)
-- **Messaging:** Kafka / Google Pub/Sub
-- **Observability:** Prometheus + Grafana + Sentry
+- **Container:** Docker + Kubernetes + Istio Service Mesh
+- **Cloud:** Multi-cloud (AWS + GCP + Azure) com failover < 1s
+- **Messaging:** Kafka + Schema Registry
+- **Observability:** Prometheus + Grafana + Sentry + DataDog
 - **CDN:** CloudFront / Cloud CDN
+- **Secrets:** HashiCorp Vault
+- **API Gateway:** Kong / AWS API Gateway
+- **Resiliência:** RPO ≤ 5min, RTO ≤ 60s
 
 ### Frontend
 
@@ -92,11 +124,12 @@ Go (WebSocket & Geolocalização)
 
 | Documento | Descrição |
 |-----------|-----------|
-| [📖 Índice Geral](./docs/INDICE.md) | Navegação completa da documentação |
+| [📖 Índice Geral](./docs/INDICE.md) | Navegação completa (14 módulos) |
 | [📋 Sumário Executivo](./docs/sumario-executivo.md) | Visão geral dos 7 módulos core |
-| [🏗️ Arquitetura Integrada](./docs/arquitetura-modulos-integrados.md) | Arquitetura dos 4 novos módulos |
+| [🏗️ Arquitetura Integrada](./docs/arquitetura-modulos-integrados.md) | Arquitetura dos 4 módulos verticais |
 | [🗓️ Roadmap de Integração](./docs/roadmap-integracao-modulos.md) | Planejamento de 12 meses |
-| [✅ Relatório de Integração](./docs/relatorio-integracao-tecnica.md) | Validação e consistência técnica |
+| [✅ Relatório Integração Vertical](./docs/relatorio-integracao-tecnica.md) | Validação módulos 8-11 |
+| [✅ Relatório Integração Horizontal](./docs/relatorio-integracao-3-novos-modulos.md) | Validação módulos 12-14 ⭐ |
 
 ### Estrutura de Diretórios
 
@@ -114,9 +147,10 @@ friendapp-core/
 │   ├── arquitetura-modulos-integrados.md
 │   ├── roadmap-integracao-modulos.md
 │   ├── relatorio-integracao-tecnica.md
-│   └── resumos/             # 11 resumos técnicos detalhados
+│   ├── relatorio-integracao-3-novos-modulos.md ⭐
+│   └── resumos/             # 14 resumos técnicos detalhados
 ├── manuais/
-│   └── manuais/             # 11 PDFs técnicos originais
+│   └── manuais/             # 14 PDFs técnicos originais
 ├── infra/
 │   ├── docker/              # Dockerfiles
 │   └── kubernetes/          # Manifests K8s
@@ -128,32 +162,47 @@ friendapp-core/
 
 ---
 
-## 🚀 Roadmap de Implementação
+## 🚀 Roadmap de Implementação (Atualizado)
 
-### Q4 2025
-
-| Mês | Fase | Módulo | Status |
-|-----|------|--------|--------|
-| **Out-Nov** | Fase 1 | Chat Vibracional MVP | 🔴 Em preparação |
-| **Dez-Jan** | Fase 2 | Eventos MVP | 🟡 Planejado |
-
-### Q1 2026
+### Q4 2025 - Q1 2026 (Fase 0) ⭐ CRÍTICA
 
 | Mês | Fase | Módulo | Status |
 |-----|------|--------|--------|
-| **Fev-Abr** | Fase 3 | Locais Parceiros B2B | 🟡 Planejado |
+| **Out-Nov** | Fase 0.1 | Infraestrutura (Módulo 12) | 🔴 Prioridade Máxima |
+| **Dez-Jan** | Fase 0.2 | IA Operacional (Módulo 13) | 🔴 Prioridade Máxima |
+| **Fev-Mar** | Fase 0.3 | Suporte ao Usuário (Módulo 14) | 🔴 Prioridade Máxima |
+
+**Nota:** Fase 0 é pré-requisito para todas as fases seguintes.
 
 ### Q2 2026
 
 | Mês | Fase | Módulo | Status |
 |-----|------|--------|--------|
-| **Mai-Jul** | Fase 4 | Modo Viagem + Modo Bora | 🟡 Planejado |
+| **Abr-Mai** | Fase 1 | Chat Vibracional MVP | 🟡 Aguardando Fase 0 |
 
 ### Q3 2026
 
 | Mês | Fase | Módulo | Status |
 |-----|------|--------|--------|
-| **Ago-Set** | Fase 5 | Otimizações & Features Avançadas | 🟢 Planejado |
+| **Jun-Jul** | Fase 2 | Eventos MVP | 🟡 Planejado |
+
+### Q4 2026
+
+| Mês | Fase | Módulo | Status |
+|-----|------|--------|--------|
+| **Ago-Out** | Fase 3 | Locais Parceiros B2B | 🟡 Planejado |
+
+### Q1 2027
+
+| Mês | Fase | Módulo | Status |
+|-----|------|--------|--------|
+| **Nov-Jan** | Fase 4 | Modo Viagem + Modo Bora | 🟡 Planejado |
+
+### Q2 2027+
+
+| Mês | Fase | Módulo | Status |
+|-----|------|--------|--------|
+| **Fev+** | Fase 5 | Otimizações & Features Avançadas | 🟢 Planejado |
 
 ---
 
@@ -241,15 +290,16 @@ Consulte [TESTING_RESULTS.md](./TESTING_RESULTS.md) para resultados dos últimos
 
 | Squad | Responsabilidade | Tamanho |
 |-------|------------------|---------|
-| **Core Platform** | Cadastro, IA, Personalidade | 6 pessoas |
+| **Core Platform** | Cadastro, IA Aurah, Personalidade | 6 pessoas |
 | **Social Experience** | Feed, Conexões, Jogo | 5 pessoas |
 | **Real-Time** | Chat, Mapa | 5 pessoas |
 | **Events & Places** | Eventos, Locais | 4 pessoas |
 | **Discovery** | Viagem, Bora | 4 pessoas |
-| **Data & ML** | IA, Vetores, Analytics | 4 pessoas |
-| **DevOps & Infra** | K8s, Databases, CI/CD | 3 pessoas |
+| **Data & ML** | IA Aurah, IA Operacional, Vetores, Analytics | 5 pessoas |
+| **DevOps & Infra** | Infraestrutura (Módulo 12), K8s, Kafka, Multi-cloud | 5 pessoas |
+| **Community & Support** | Suporte ao Usuário (Módulo 14), Jornada, Comunidade | 4 pessoas |
 
-**Total:** ~31 pessoas em 7 squads
+**Total:** ~37 pessoas em 8 squads (+6 pessoas, +1 squad para módulos horizontais)
 
 ### Processo de Contribuição
 
@@ -294,5 +344,5 @@ Agradecimentos especiais a todos os contribuidores que tornaram este projeto pos
 ---
 
 **Última Atualização:** 17/10/2025  
-**Versão:** 2.0  
-**Status:** ✅ Documentação Completa | 🔴 Chat MVP em Preparação
+**Versão:** 3.0 (14 módulos: 11 verticais + 3 horizontais)  
+**Status:** ✅ Documentação Completa | 🔴 Fase 0 (Infraestrutura) em Preparação
