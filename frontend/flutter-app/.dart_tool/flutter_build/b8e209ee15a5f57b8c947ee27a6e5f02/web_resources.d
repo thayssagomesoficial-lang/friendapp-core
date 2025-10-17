@@ -1,0 +1,1 @@
+ build/web/manifest.json:  /home/ubuntu/friendapp-core/frontend/flutter-app/web/manifest.json /home/ubuntu/friendapp-core/frontend/flutter-app/web/index.html

@@ -4,11 +4,11 @@ services:
   postgres:
     image: postgres:15-alpine
     environment:
-      POSTGRES_DB: friendapp
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-friendapp}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/microservices/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
@@ -21,7 +21,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -33,11 +33,11 @@ services:
   neo4j:
     image: neo4j:5-community
     environment:
-      NEO4J_AUTH: neo4j/password
+      NEO4J_AUTH: ${NEO4J_AUTH:-neo4j/password}
       NEO4J_dbms_memory_heap_max__size: 512M
     ports:
-      - "7474:7474"
-      - "7687:7687"
+      - "${NEO4J_HTTP_PORT:-7474}:7474"
+      - "${NEO4J_BOLT_PORT:-7687}:7687"
     volumes:
       - neo4j_data:/data
     healthcheck:
@@ -45,6 +45,43 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  api-gateway:
+    build:
+      context: ./backend/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "${API_GATEWAY_PORT:-3000}:3000"
+    environment:
+      PORT: 3000
+      SELOS_SERVICE_URL: http://selos-service:3004
+      VERIFICACAO_SERVICE_URL: http://verificacao-service:3005
+      REPUTACAO_SERVICE_URL: http://reputacao-service:3006
+      SEGURANCA_SERVICE_URL: http://seguranca-vibracional-service:3007
+      ECONOMIA_SERVICE_URL: http://economia-service:3008
+      ANTIFRAUDE_SERVICE_URL: http://antifraude-service:3009
+      JWT_SECRET: ${JWT_SECRET:-friendapp-secret-key-change-in-production}
+      RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-100}
+      RATE_LIMIT_WINDOW: ${RATE_LIMIT_WINDOW:-60000}
+    depends_on:
+      selos-service:
+        condition: service_healthy
+      verificacao-service:
+        condition: service_healthy
+      reputacao-service:
+        condition: service_healthy
+      seguranca-vibracional-service:
+        condition: service_healthy
+      economia-service:
+        condition: service_healthy
+      antifraude-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
 
   selos-service:
     build:
@@ -56,12 +93,18 @@ services:
       PORT: 3004
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_DB: friendapp
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-friendapp}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3004/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   verificacao-service:
     build:
@@ -73,12 +116,19 @@ services:
       PORT: 3005
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_DB: friendapp
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-friendapp}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      MOCK_MODE: ${MOCK_MODE:-true}
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3005/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   reputacao-service:
     build:
@@ -89,12 +139,18 @@ services:
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_DB: friendapp
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-friendapp}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3006/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   seguranca-vibracional-service:
     build:
@@ -104,10 +160,16 @@ services:
       - "3007:3007"
     environment:
       PORT: 3007
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/friendapp?sslmode=disable
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-friendapp}?sslmode=disable
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3007/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   economia-service:
     build:
@@ -119,12 +181,18 @@ services:
       PORT: 3008
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_DB: friendapp
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-friendapp}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3008/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   antifraude-service:
     build:
@@ -135,9 +203,9 @@ services:
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_DB: friendapp
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-friendapp}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       NEO4J_URI: bolt://neo4j:7687
       NEO4J_USER: neo4j
       NEO4J_PASSWORD: password
@@ -146,8 +214,28 @@ services:
         condition: service_healthy
       neo4j:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3009/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    depends_on:
+      - api-gateway
 
 volumes:
   postgres_data:
   redis_data:
   neo4j_data:
+  prometheus_data:

@@ -1,14 +1,23 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List
 import logging
+import time
 from database import init_db, get_db_connection
 from neo4j_service import Neo4jService
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from starlette.responses import Response
 import os
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format='{"timestamp":"%(asctime)s","level":"%(levelname)s","message":"%(message)s","requestId":"%(requestId)s"}'
+)
 logger = logging.getLogger(__name__)
+
+REQUEST_COUNT = Counter('http_requests_total', 'Total HTTP requests', ['method', 'endpoint', 'status'])
+REQUEST_DURATION = Histogram('http_request_duration_seconds', 'HTTP request duration', ['method', 'endpoint'])
 
 app = FastAPI(title="Antifraude Service")
 
@@ -19,6 +28,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def add_metrics(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    duration = time.time() - start_time
+    REQUEST_COUNT.labels(method=request.method, endpoint=request.url.path, status=response.status_code).inc()
+    REQUEST_DURATION.labels(method=request.method, endpoint=request.url.path).observe(duration)
+    return response
 
 neo4j_service = None
 
@@ -55,6 +73,32 @@ def health_check():
         "status": "healthy",
         "service": "antifraude-service"
     }
+
+@app.get("/ready")
+def readiness_check():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1")
+        cursor.close()
+        conn.close()
+        
+        db_status = "connected"
+        neo4j_status = "connected" if neo4j_service else "not_configured"
+        
+        return {
+            "ready": True,
+            "service": "antifraude-service",
+            "database": db_status,
+            "neo4j": neo4j_status
+        }
+    except Exception as e:
+        logger.error(f"Readiness check failed: {e}", extra={'requestId': 'readiness'})
+        raise HTTPException(status_code=503, detail="Service not ready")
+
+@app.get("/metrics")
+def metrics():
+    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 @app.post("/api/antifraude/registrar-interacao")
 def registrar_interacao(request: RegistrarInteracaoRequest):

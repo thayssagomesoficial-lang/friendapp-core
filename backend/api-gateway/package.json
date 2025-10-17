@@ -1,0 +1,26 @@
+{
+  "name": "api-gateway",
+  "version": "1.0.0",
+  "description": "API Gateway for FriendApp microservices",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "fastify": "^4.24.3",
+    "@fastify/cors": "^8.4.1",
+    "@fastify/rate-limit": "^8.1.0",
+    "@fastify/jwt": "^7.2.3",
+    "@fastify/http-proxy": "^9.3.0",
+    "axios": "^1.6.0",
+    "pino": "^8.16.2",
+    "pino-pretty": "^10.2.3",
+    "dotenv": "^16.3.1",
+    "prom-client": "^15.0.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

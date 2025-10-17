@@ -1,0 +1,15 @@
+{
+  "name": "friendapp-core",
+  "version": "1.0.0",
+  "description": "FriendApp Core - Microservices Platform",
+  "scripts": {
+    "test:newman": "newman run tests/postman/friendapp-core.postman_collection.json --reporters cli,json --reporter-json-export tests/results/newman-results.json",
+    "up": "make up",
+    "down": "make down",
+    "test": "make test",
+    "smoke-test": "make smoke-test"
+  },
+  "devDependencies": {
+    "newman": "^6.0.0"
+  }
+}
