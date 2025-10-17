@@ -1,8 +1,8 @@
 # Índice Geral da Documentação - FriendApp Core
 
 **Última Atualização:** 17/10/2025  
-**Versão:** 2.0  
-**Total de Módulos:** 11
+**Versão:** 3.0  
+**Total de Módulos:** 14 (11 verticais + 3 horizontais)
 
 ---
 
@@ -11,11 +11,12 @@
 ```
 friendapp-core/
 ├── docs/
-│   ├── INDICE.md (este arquivo)
+│   ├── INDICE.md (este arquivo - 14 módulos)
 │   ├── sumario-executivo.md (visão geral dos 7 módulos core)
-│   ├── arquitetura-modulos-integrados.md (arquitetura dos 4 novos módulos)
+│   ├── arquitetura-modulos-integrados.md (arquitetura dos 4 módulos verticais novos)
 │   ├── roadmap-integracao-modulos.md (planejamento de implementação)
-│   ├── relatorio-integracao-tecnica.md (validação e consistência)
+│   ├── relatorio-integracao-tecnica.md (validação módulos 8-11)
+│   ├── relatorio-integracao-3-novos-modulos.md (validação módulos 12-14) ⭐ NOVO
 │   └── resumos/
 │       ├── [Core] Sistema de Cadastro Consciente
 │       ├── [Core] Teste de Personalidade Energética
@@ -24,12 +25,15 @@ friendapp-core/
 │       ├── [Core] Sistema de Conexões Autênticas
 │       ├── [Core] Jogo da Transmutação
 │       ├── [Core] Mapa de Frequência
-│       ├── [Novo] Sistema de Chat Vibracional ⭐
-│       ├── [Novo] Sistema de Eventos e Experiências ⭐
-│       ├── [Novo] Sistema de Locais Parceiros B2B ⭐
-│       └── [Novo] Sistema de Conexões Reais (Viagem + Bora) ⭐
+│       ├── [Vertical] Sistema de Chat Vibracional ⭐
+│       ├── [Vertical] Sistema de Eventos e Experiências ⭐
+│       ├── [Vertical] Sistema de Locais Parceiros B2B ⭐
+│       ├── [Vertical] Sistema de Conexões Reais (Viagem + Bora) ⭐
+│       ├── [Horizontal] Arquitetura Tecnológica e Infraestrutura ⭐ NOVO
+│       ├── [Horizontal] Inteligência Artificial Operacional ⭐ NOVO
+│       └── [Horizontal] Suporte ao Usuário ⭐ NOVO
 └── manuais/
-    └── manuais/ (11 PDFs técnicos originais)
+    └── manuais/ (14 PDFs técnicos originais)
 ```
 
 ---
@@ -41,9 +45,10 @@ friendapp-core/
 | Documento | Descrição | Páginas | Última Atualização |
 |-----------|-----------|---------|-------------------|
 | [Sumário Executivo](./sumario-executivo.md) | Visão completa do ecossistema FriendApp (módulos core 1-7) | 613 linhas | 17/10/2025 |
-| [Arquitetura de Módulos Integrados](./arquitetura-modulos-integrados.md) | Arquitetura técnica dos 4 novos módulos | 427 linhas | 17/10/2025 |
+| [Arquitetura de Módulos Integrados](./arquitetura-modulos-integrados.md) | Arquitetura técnica dos 4 módulos verticais novos | 427 linhas | 17/10/2025 |
 | [Roadmap de Integração](./roadmap-integracao-modulos.md) | Planejamento de 12 meses para implementação | 513 linhas | 17/10/2025 |
-| [Relatório de Integração Técnica](./relatorio-integracao-tecnica.md) | Validação de consistência e próximos passos | Novo | 17/10/2025 |
+| [Relatório de Integração Técnica](./relatorio-integracao-tecnica.md) | Validação de módulos 8-11 (verticais) | 351 linhas | 17/10/2025 |
+| [Relatório de Integração - 3 Novos Módulos](./relatorio-integracao-3-novos-modulos.md) | Validação de módulos 12-14 (horizontais) ⭐ | 462 linhas | 17/10/2025 |
 
 ### 2. Resumos Técnicos por Módulo
 
@@ -59,7 +64,7 @@ friendapp-core/
 | 6 | Jogo da Transmutação | [jogo-transmutacao.md](./resumos/jogo-transmutacao.md) | 204 | ✅ Ativo |
 | 7 | Mapa de Frequência | [mapa-frequencia.md](./resumos/mapa-frequencia.md) | 294 | ✅ Ativo |
 
-#### Novos Módulos (Recém Integrados)
+#### Módulos Verticais (Funcionalidades Recém Integradas)
 
 | # | Módulo | Arquivo | Linhas | Status |
 |---|--------|---------|--------|--------|
@@ -67,6 +72,14 @@ friendapp-core/
 | 9 | Sistema de Eventos, Encontros e Experiências | [sistema-eventos-experiencias.md](./resumos/sistema-eventos-experiencias.md) | 524 | ⭐ Planejado |
 | 10 | Sistema de Locais Parceiros e Experiências Comerciais | [sistema-locais-parceiros.md](./resumos/sistema-locais-parceiros.md) | 561 | ⭐ Planejado |
 | 11 | Sistema de Conexões Reais (Modo Viagem + Bora) | [sistema-conexoes-reais.md](./resumos/sistema-conexoes-reais.md) | 625 | ⭐ Planejado |
+
+#### Módulos Horizontais (Camadas Transversais) ⭐ NOVO
+
+| # | Módulo | Arquivo | Linhas | Status |
+|---|--------|---------|--------|--------|
+| 12 | Arquitetura Tecnológica e Infraestrutura | [arquitetura-tecnologica-infraestrutura.md](./resumos/arquitetura-tecnologica-infraestrutura.md) | 417 | ⭐ Base Crítica |
+| 13 | Inteligência Artificial Operacional | [ia-operacional.md](./resumos/ia-operacional.md) | 543 | ⭐ Otimização |
+| 14 | Suporte ao Usuário | [suporte-usuario.md](./resumos/suporte-usuario.md) | 698 | ⭐ Acolhimento |
 
 ---
 
@@ -147,7 +160,33 @@ graph TD
 - ← Personalidade: Compatibilidade de grupo
 - → Bora: Modo Viagem complementa Bora
 
-**Total:** 38 pontos de integração mapeados
+**Total Módulos Verticais:** 38 pontos de integração
+
+### Integrações com Módulos Horizontais (NOVO)
+
+#### Arquitetura Tecnológica (11 integrações)
+Todos os 11 módulos verticais dependem da infraestrutura:
+- Multi-cloud (AWS + GCP + Azure)
+- Kubernetes + Istio Service Mesh
+- Kafka + Schema Registry
+- Bancos Híbridos (PostgreSQL + Firestore + Neo4j + Redis + BigQuery)
+- Failover Quântico < 1s
+- EVU (Experiência Vibracional Útil)
+
+#### IA Operacional (15 integrações)
+- **IA Recomendação:** Feed (5), Conexões (4), Eventos (2), Locais (2), Viagem (2)
+- **IA Performance:** Todos os módulos (auto-scaling)
+- **IA Segurança:** Todos os módulos (detecção de anomalias)
+- **IA Jornada:** Feed, Suporte, Onboarding (UX dinâmica)
+- **Isolamento:** Separado da IA Aurah Kosmos (camada anti-vibração)
+
+#### Suporte ao Usuário (12 integrações)
+- **Jornada Sensorial:** IA Aurah, Feed, Conexões, Jogo (check-ins)
+- **Comunidade Vibracional:** IA Aurah, Conexões, Eventos (grupos)
+- **Suporte Inteligente:** IA Aurah (Nível 1), todos os módulos (tickets)
+- **Onboarding Sensorial:** Cadastro, Personalidade (ritual de entrada)
+
+**Total Geral:** 76 pontos de integração mapeados (38 verticais + 38 horizontais)
 
 ---
 
@@ -157,15 +196,16 @@ graph TD
 
 | Tecnologia | Módulos | Função |
 |------------|---------|--------|
-| **Node.js** | Todos | APIs REST principais |
-| **Python** | IA Aurah, ML | Processamento de IA e aprendizado |
-| **Go** | Chat, Locais, Eventos | WebSocket, geolocalização, alta performance |
-| **PostgreSQL** | Todos | Banco de dados relacional principal |
-| **Firestore** | Chat, Feed, Mapa | Dados em tempo real |
-| **Neo4j** | Conexões, Viagem | Grafos relacionais |
-| **Redis** | Todos | Cache e estados temporários |
-| **ElasticSearch** | Feed, Eventos, Locais, Viagem | Busca e indexação |
-| **Kafka/PubSub** | Novos módulos | Mensageria assíncrona |
+| **Node.js** | Cadastro, Feed, Conexões, Chat, FriendCoins, IA Operacional | APIs REST principais |
+| **Python** | IA Aurah, Personalidade, Jogo, IA Operacional | ML/NLP, TensorFlow, PyTorch |
+| **Go** | Chat (WebSocket), Eventos, Locais, Mapa, Performance | Alta performance, concorrência |
+| **PostgreSQL** | Todos os 14 módulos | Dados transacionais |
+| **Firestore** | Chat, Feed, Mapa, Eventos, Jornada Sensorial | Tempo real |
+| **Neo4j** | Conexões, Locais, Viagem | Grafos de relacionamento |
+| **Redis** | Todos (via IA Performance) | Cache, sessões, rankings |
+| **BigQuery** | IA Aurah, IA Operacional | Analytics vibracional |
+| **ElasticSearch** | Feed, Eventos, Locais, Viagem, IA Operacional | Busca e logs |
+| **Kafka** | Infraestrutura (Módulo 12) | Mensageria assíncrona + Schema Registry |
 
 ### Frontend
 
@@ -181,33 +221,38 @@ graph TD
 
 | Componente | Uso |
 |------------|-----|
-| **Docker** | Containerização |
-| **Kubernetes (GKE/EKS)** | Orquestração e auto-scaling |
-| **AWS/GCP** | Multi-cloud |
-| **CloudFront/CDN** | Distribuição de mídia |
-| **Prometheus + Grafana** | Observabilidade |
-| **Sentry** | Error tracking |
-| **DataDog** | APM e logs |
+| **Docker** | Containerização (Módulo 12) |
+| **Kubernetes + Istio** | Orquestração, service mesh, HPA (Módulo 12) |
+| **AWS + GCP + Azure** | Multi-cloud, resiliência planetária (Módulo 12) |
+| **CloudFront / Cloud CDN** | Distribuição de mídia + Redis Edge (Módulo 12) |
+| **Prometheus + Grafana** | Observabilidade 360° + métricas vibracionais (Módulo 12) |
+| **Sentry** | Error tracking (Módulo 12) |
+| **DataDog** | APM e logs (Módulo 12) |
+| **Kong / AWS API Gateway** | API Gateway (Módulo 12) |
+| **HashiCorp Vault** | Gestão de secrets (Módulo 12) |
 
 ---
 
 ## 📊 Timeline de Implementação
 
-### Fase Atual: Documentação Concluída ✅
-- ✅ 11 módulos documentados
-- ✅ Arquitetura consolidada
-- ✅ Integrações mapeadas
-- ✅ Roadmap definido
+### Fase Atual: Documentação Expandida ✅
+- ✅ 14 módulos documentados (11 verticais + 3 horizontais)
+- ✅ Arquitetura em camadas consolidada
+- ✅ 76 pontos de integração mapeados
+- ✅ Roadmap atualizado com Fase 0
 
-### Próximas Fases
+### Próximas Fases (Atualizado)
 
 | Fase | Período | Módulo | Status |
 |------|---------|--------|--------|
-| **Fase 1** | Mês 1-2 | Chat Vibracional MVP | 🔴 Próxima |
-| **Fase 2** | Mês 3-4 | Eventos MVP + Integração Chat | 🟡 Planejado |
-| **Fase 3** | Mês 5-7 | Locais Parceiros B2B | 🟡 Planejado |
-| **Fase 4** | Mês 8-10 | Modo Viagem + Modo Bora | 🟡 Planejado |
-| **Fase 5** | Mês 11-12 | Otimizações & Features Avançadas | 🟢 Planejado |
+| **Fase 0** | Mês 1-4 | Infraestrutura + IA Operacional + Suporte (Base) | 🔴 Crítica |
+| **Fase 1** | Mês 5-6 | Chat Vibracional MVP | 🟡 Planejado |
+| **Fase 2** | Mês 7-8 | Eventos MVP | 🟡 Planejado |
+| **Fase 3** | Mês 9-11 | Locais Parceiros B2B | 🟡 Planejado |
+| **Fase 4** | Mês 12-14 | Modo Viagem + Modo Bora | 🟡 Planejado |
+| **Fase 5** | Mês 15+ | Otimizações & Features Avançadas | 🟢 Planejado |
+
+**Nota:** Fase 0 (módulos horizontais) é pré-requisito para as demais fases.
 
 ---
 
@@ -241,7 +286,8 @@ graph TD
 ### Por Tema Técnico
 
 #### Inteligência Artificial
-- [IA Aurah Kosmos](./resumos/ia-aurah-kosmos.md) (módulo central)
+- [IA Aurah Kosmos](./resumos/ia-aurah-kosmos.md) (módulo central - vibracional)
+- [IA Operacional](./resumos/ia-operacional.md) ⭐ (recomendação, performance, segurança, jornada)
 - [Teste de Personalidade](./resumos/teste-personalidade-energetica.md) (ML/NLP)
 - [Feed Sensorial](./resumos/feed-sensorial.md) (vetorização)
 - [Chat Vibracional](./resumos/sistema-chat-vibracional.md) (análise de metadados)
@@ -273,6 +319,12 @@ graph TD
 - [Eventos](./resumos/sistema-eventos-experiencias.md)
 - [Viagem/Bora](./resumos/sistema-conexoes-reais.md)
 
+#### Infraestrutura & DevOps ⭐ NOVO
+- [Arquitetura Tecnológica e Infraestrutura](./resumos/arquitetura-tecnologica-infraestrutura.md) (multi-cloud, K8s, Kafka)
+
+#### Experiência do Usuário ⭐ NOVO
+- [Suporte ao Usuário](./resumos/suporte-usuario.md) (jornada sensorial, comunidade, mentores)
+
 ---
 
 ## 📞 Referências Rápidas
@@ -289,6 +341,9 @@ graph TD
 | Eventos | Taxa de check-in | > 70% |
 | Locais | Score atualização | < 15 min |
 | Viagem/Bora | Precisão colisão | > 75% |
+| Infraestrutura | Uptime Global | 99,99% |
+| IA Operacional | Latência p95 | < 150ms |
+| Suporte | Check-ins semanais | > 70% |
 
 ### Equipes Responsáveis
 
@@ -299,10 +354,11 @@ graph TD
 | **Real-Time** | Chat, Mapa | 5 pessoas |
 | **Events & Places** | Eventos, Locais | 4 pessoas |
 | **Discovery** | Viagem, Bora | 4 pessoas |
-| **Data & ML** | IA, Vetores, Analytics | 4 pessoas |
-| **DevOps & Infra** | Kubernetes, Databases, CI/CD | 3 pessoas |
+| **Data & ML** | IA Aurah, IA Operacional, Vetores, Analytics | 5 pessoas |
+| **DevOps & Infra** | Infraestrutura, Kubernetes, Databases, CI/CD | 5 pessoas |
+| **Community & Support** | Suporte, Jornada Sensorial, Comunidade | 4 pessoas |
 
-**Total:** ~31 pessoas distribuídas em 7 squads
+**Total:** ~37 pessoas distribuídas em 8 squads (+6 pessoas, +1 squad)
 
 ---
 
@@ -323,4 +379,4 @@ graph TD
 **Índice Mantido por:** Tech Lead + Product Owner  
 **Última Revisão:** 17/10/2025  
 **Próxima Revisão:** Após cada release major  
-**Versão:** 2.0
+**Versão:** 3.0 (14 módulos: 11 verticais + 3 horizontais)
