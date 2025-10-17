@@ -4,13 +4,38 @@ import (
 	"database/sql"
 	"log"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var db *sql.DB
+
+var (
+	httpRequestsTotal = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "http_requests_total",
+			Help: "Total number of HTTP requests",
+		},
+		[]string{"method", "endpoint", "status"},
+	)
+	httpRequestDuration = prometheus.NewHistogramVec(
+		prometheus.HistogramOpts{
+			Name: "http_request_duration_seconds",
+			Help: "HTTP request duration in seconds",
+		},
+		[]string{"method", "endpoint"},
+	)
+)
+
+func init() {
+	prometheus.MustRegister(httpRequestsTotal)
+	prometheus.MustRegister(httpRequestDuration)
+}
 
 type RiskCalculationRequest struct {
 	UserID                 string  `json:"user_id" binding:"required"`
@@ -54,7 +79,11 @@ func main() {
 
 	r := gin.Default()
 
+	r.Use(prometheusMiddleware())
+
 	r.GET("/health", healthCheck)
+	r.GET("/ready", readyCheck)
+	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 	r.POST("/api/seguranca/calcular-risco", calcularRisco)
 	r.GET("/api/seguranca/usuario/:userId", obterStatusSeguranca)
 
@@ -97,10 +126,42 @@ func createTables() {
 	}
 }
 
+func prometheusMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
+		
+		c.Next()
+		
+		duration := time.Since(start).Seconds()
+		status := c.Writer.Status()
+		
+		httpRequestsTotal.WithLabelValues(c.Request.Method, c.FullPath(), string(rune(status))).Inc()
+		httpRequestDuration.WithLabelValues(c.Request.Method, c.FullPath()).Observe(duration)
+	}
+}
+
 func healthCheck(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"status":  "healthy",
 		"service": "seguranca-vibracional-service",
+	})
+}
+
+func readyCheck(c *gin.Context) {
+	if err := db.Ping(); err != nil {
+		c.JSON(503, gin.H{
+			"ready":    false,
+			"service":  "seguranca-vibracional-service",
+			"database": "disconnected",
+			"error":    err.Error(),
+		})
+		return
+	}
+	
+	c.JSON(200, gin.H{
+		"ready":    true,
+		"service":  "seguranca-vibracional-service",
+		"database": "connected",
 	})
 }
 

@@ -1,0 +1,353 @@
+{
+  "info": {
+    "name": "FriendApp Core - E2E Tests",
+    "description": "Complete E2E test suite for FriendApp microservices",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Checks",
+      "item": [
+        {
+          "name": "API Gateway Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/health",
+              "host": ["{{gateway_url}}"],
+              "path": ["health"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Gateway is healthy', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.status).to.eql('healthy');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Selos Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{selos_url}}/health",
+              "host": ["{{selos_url}}"],
+              "path": ["health"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Selos service is healthy', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Verificacao Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{verificacao_url}}/health",
+              "host": ["{{verificacao_url}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Reputacao Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{reputacao_url}}/health",
+              "host": ["{{reputacao_url}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Get JWT Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{test_user_id}}\",\n  \"email\": \"test@friendapp.com\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/v1/auth/token",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "v1", "auth", "token"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Token generated successfully', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.token).to.exist;",
+                  "    pm.collectionVariables.set('auth_token', response.token);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "E2E Flow - Selos",
+      "item": [
+        {
+          "name": "Create Selo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"verificacao_identidade\",\n  \"user_id\": \"{{test_user_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/v1/selos/criar",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "v1", "selos", "criar"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Selo created successfully', function() {",
+                  "    pm.response.to.have.status(201);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.selo_id).to.exist;",
+                  "    pm.collectionVariables.set('selo_id', response.selo_id);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Assign Selo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{test_user_id}}\",\n  \"selo_id\": \"{{selo_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/v1/selos/atribuir",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "v1", "selos", "atribuir"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Selo assigned successfully', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "E2E Flow - Verificacao",
+      "item": [
+        {
+          "name": "Simular Verificacao",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{test_user_id}}\",\n  \"tipo_verificacao\": \"DUC\",\n  \"documento\": \"12345678900\",\n  \"selfie_url\": \"https://example.com/selfie.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/v1/verificacao/iniciar",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "v1", "verificacao", "iniciar"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Verification simulated successfully', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.status).to.exist;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "E2E Flow - Reputacao",
+      "item": [
+        {
+          "name": "Calculate Score",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{test_user_id}}\",\n  \"coerencia\": 0.8,\n  \"reciprocidade\": 0.7,\n  \"feedbacks_positivos\": 10,\n  \"denuncias_validadas\": 0,\n  \"maturity_days\": 30\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/v1/reputacao/calcular",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "v1", "reputacao", "calcular"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Reputation score calculated', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.score).to.exist;",
+                  "    pm.expect(response.score).to.be.a('number');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get User Reputation",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{gateway_url}}/api/v1/reputacao/usuario/{{test_user_id}}",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "v1", "reputacao", "usuario", "{{test_user_id}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('User reputation retrieved', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.score).to.exist;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "gateway_url",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "selos_url",
+      "value": "http://localhost:3004"
+    },
+    {
+      "key": "verificacao_url",
+      "value": "http://localhost:3005"
+    },
+    {
+      "key": "reputacao_url",
+      "value": "http://localhost:3006"
+    },
+    {
+      "key": "test_user_id",
+      "value": "550e8400-e29b-41d4-a716-446655440000"
+    }
+  ]
+}

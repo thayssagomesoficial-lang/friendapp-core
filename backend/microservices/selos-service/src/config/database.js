@@ -71,5 +71,6 @@ const getFirestore = () => admin.firestore();
 module.exports = { 
   initDatabase, 
   getDb, 
-  getFirestore 
+  getFirestore,
+  pool
 };

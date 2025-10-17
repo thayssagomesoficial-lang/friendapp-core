@@ -1,14 +1,23 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
 import logging
+import time
 from database import init_db, get_db_connection
 from calculator import calcular_reputacao, obter_estado_vibracional
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from starlette.responses import Response
 import os
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format='{"timestamp":"%(asctime)s","level":"%(levelname)s","message":"%(message)s","requestId":"%(requestId)s"}'
+)
 logger = logging.getLogger(__name__)
+
+REQUEST_COUNT = Counter('http_requests_total', 'Total HTTP requests', ['method', 'endpoint', 'status'])
+REQUEST_DURATION = Histogram('http_request_duration_seconds', 'HTTP request duration', ['method', 'endpoint'])
 
 app = FastAPI(title="Reputacao Service")
 
@@ -19,6 +28,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def add_metrics(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    duration = time.time() - start_time
+    REQUEST_COUNT.labels(method=request.method, endpoint=request.url.path, status=response.status_code).inc()
+    REQUEST_DURATION.labels(method=request.method, endpoint=request.url.path).observe(duration)
+    return response
 
 class AtualizarReputacaoRequest(BaseModel):
     user_id: str
@@ -31,7 +49,7 @@ class AtualizarReputacaoRequest(BaseModel):
 @app.on_event("startup")
 async def startup():
     init_db()
-    logger.info("Reputacao Service started")
+    logger.info("Reputacao Service started", extra={'requestId': 'startup'})
 
 @app.get("/health")
 def health_check():
@@ -39,6 +57,27 @@ def health_check():
         "status": "healthy",
         "service": "reputacao-service"
     }
+
+@app.get("/ready")
+def readiness_check():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1")
+        cursor.close()
+        conn.close()
+        return {
+            "ready": True,
+            "service": "reputacao-service",
+            "database": "connected"
+        }
+    except Exception as e:
+        logger.error(f"Readiness check failed: {e}", extra={'requestId': 'readiness'})
+        raise HTTPException(status_code=503, detail="Service not ready")
+
+@app.get("/metrics")
+def metrics():
+    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 @app.post("/api/reputacao/calcular")
 def calcular_score(request: AtualizarReputacaoRequest):
