@@ -1,0 +1,153 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: friendapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/microservices/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  neo4j:
+    image: neo4j:5-community
+    environment:
+      NEO4J_AUTH: neo4j/password
+      NEO4J_dbms_memory_heap_max__size: 512M
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "password", "RETURN 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  selos-service:
+    build:
+      context: ./backend/microservices/selos-service
+      dockerfile: Dockerfile
+    ports:
+      - "3004:3004"
+    environment:
+      PORT: 3004
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: friendapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  verificacao-service:
+    build:
+      context: ./backend/microservices/verificacao-service
+      dockerfile: Dockerfile
+    ports:
+      - "3005:3005"
+    environment:
+      PORT: 3005
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: friendapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  reputacao-service:
+    build:
+      context: ./backend/microservices/reputacao-service
+      dockerfile: Dockerfile
+    ports:
+      - "3006:3006"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: friendapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  seguranca-vibracional-service:
+    build:
+      context: ./backend/microservices/seguranca-vibracional-service
+      dockerfile: Dockerfile
+    ports:
+      - "3007:3007"
+    environment:
+      PORT: 3007
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/friendapp?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  economia-service:
+    build:
+      context: ./backend/microservices/economia-service
+      dockerfile: Dockerfile
+    ports:
+      - "3008:3008"
+    environment:
+      PORT: 3008
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: friendapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  antifraude-service:
+    build:
+      context: ./backend/microservices/antifraude-service
+      dockerfile: Dockerfile
+    ports:
+      - "3009:3009"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: friendapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: password
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
+  neo4j_data:
