@@ -2,8 +2,9 @@
 
 [![Status](https://img.shields.io/badge/status-active_development-brightgreen)]()
 [![Documentation](https://img.shields.io/badge/docs-comprehensive-blue)]()
-[![Modules](https://img.shields.io/badge/modules-14-purple)]()
+[![Modules](https://img.shields.io/badge/modules-17-purple)]()
 [![Architecture](https://img.shields.io/badge/architecture-4_layers-orange)]()
+[![Version](https://img.shields.io/badge/version-3.1-blue)]()
 
 ## 🎯 Visão Geral
 
@@ -63,7 +64,7 @@ FriendApp é uma **plataforma social revolucionária** que utiliza **compatibili
 | 10 | Sistema de Locais Parceiros B2B | ⭐ Planejado | [Docs](./docs/resumos/sistema-locais-parceiros.md) |
 | 11 | Sistema de Conexões Reais (Viagem + Bora) | ⭐ Planejado | [Docs](./docs/resumos/sistema-conexoes-reais.md) |
 
-### Módulos Horizontais (Camadas Transversais) ⭐ NOVO
+### Módulos Horizontais de Infraestrutura
 
 | # | Módulo | Status | Documentação |
 |---|--------|--------|--------------|
@@ -71,7 +72,15 @@ FriendApp é uma **plataforma social revolucionária** que utiliza **compatibili
 | 13 | Inteligência Artificial Operacional | ⭐ Otimização | [Docs](./docs/resumos/ia-operacional.md) |
 | 14 | Suporte ao Usuário | ⭐ Acolhimento | [Docs](./docs/resumos/suporte-usuario.md) |
 
-**Total:** 14 módulos (11 verticais + 3 horizontais)
+### Módulos Horizontais Avançados (v3.1) ⭐ NOVO
+
+| # | Módulo | Status | Documentação |
+|---|--------|--------|--------------|
+| 15 | Sistema de Selos e Verificações | ⭐ Confiança | [Docs](./docs/resumos/sistema-selos-verificacoes.md) |
+| 16 | Sistema de Segurança Vibracional | ⭐ Proteção | [Docs](./docs/resumos/sistema-seguranca-vibracional.md) |
+| 17 | Sistema Econômico e Monetização | ⭐ Sustentabilidade | [Docs](./docs/resumos/sistema-economia-friendcoins.md) |
+
+**Total:** 17 módulos (11 verticais + 6 horizontais)
 
 ---
 
@@ -124,12 +133,13 @@ Go (WebSocket & Geolocalização)
 
 | Documento | Descrição |
 |-----------|-----------|
-| [📖 Índice Geral](./docs/INDICE.md) | Navegação completa (14 módulos) |
+| [📖 Índice Geral](./docs/INDICE.md) | Navegação completa (17 módulos) |
 | [📋 Sumário Executivo](./docs/sumario-executivo.md) | Visão geral dos 7 módulos core |
 | [🏗️ Arquitetura Integrada](./docs/arquitetura-modulos-integrados.md) | Arquitetura dos 4 módulos verticais |
 | [🗓️ Roadmap de Integração](./docs/roadmap-integracao-modulos.md) | Planejamento de 12 meses |
 | [✅ Relatório Integração Vertical](./docs/relatorio-integracao-tecnica.md) | Validação módulos 8-11 |
-| [✅ Relatório Integração Horizontal](./docs/relatorio-integracao-3-novos-modulos.md) | Validação módulos 12-14 ⭐ |
+| [✅ Relatório Integração Horizontal](./docs/relatorio-integracao-3-novos-modulos.md) | Validação módulos 12-14 |
+| [✅ Relatório Integração v3.1](./docs/relatorio-integracao-v3.1.md) | Validação módulos 15-17 ⭐ |
 
 ### Estrutura de Diretórios
 
@@ -147,10 +157,11 @@ friendapp-core/
 │   ├── arquitetura-modulos-integrados.md
 │   ├── roadmap-integracao-modulos.md
 │   ├── relatorio-integracao-tecnica.md
-│   ├── relatorio-integracao-3-novos-modulos.md ⭐
-│   └── resumos/             # 14 resumos técnicos detalhados
+│   ├── relatorio-integracao-3-novos-modulos.md
+│   ├── relatorio-integracao-v3.1.md ⭐
+│   └── resumos/             # 17 resumos técnicos detalhados
 ├── manuais/
-│   └── manuais/             # 14 PDFs técnicos originais
+│   └── manuais/             # 17 PDFs técnicos originais
 ├── infra/
 │   ├── docker/              # Dockerfiles
 │   └── kubernetes/          # Manifests K8s
@@ -343,6 +354,7 @@ Agradecimentos especiais a todos os contribuidores que tornaram este projeto pos
 
 ---
 
-**Última Atualização:** 17/10/2025  
-**Versão:** 3.0 (14 módulos: 11 verticais + 3 horizontais)  
-**Status:** ✅ Documentação Completa | 🔴 Fase 0 (Infraestrutura) em Preparação
+**Última Atualização:** 15/10/2025  
+**Versão:** 3.1 (17 módulos: 11 verticais + 6 horizontais)  
+**Status:** ✅ Documentação Completa | 🔴 Implementação v3.1 em Preparação  
+**Novidades v3.1:** Selos e Verificações, Segurança Vibracional, Economia e Monetização
