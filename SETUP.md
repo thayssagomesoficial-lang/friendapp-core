@@ -147,6 +147,7 @@ A UI será aberta no navegador em http://localhost:xxxxx (porta variável).
 | Neo4j Browser | 7474 | http://localhost:7474 |
 | Neo4j Bolt | 7687 | bolt://localhost:7687 |
 | Prometheus | 9090 | http://localhost:9090 |
+| Grafana | 3001 | http://localhost:3001 |
 
 ## 🧪 Executar Testes E2E
 
@@ -204,6 +205,8 @@ docker-compose down -v
 
 # Make
 make clean
+# OU
+make down-v
 ```
 
 ### Rebuild dos Serviços
@@ -217,6 +220,62 @@ docker-compose up -d
 make build
 make up
 ```
+
+## 💾 Backup e Restore
+
+### Fazer Backup dos Bancos de Dados
+
+```bash
+# Backup PostgreSQL
+make backup-postgres
+
+# Backup Neo4j
+make backup-neo4j
+```
+
+Os backups serão salvos em `./backups/postgres/` e `./backups/neo4j/`.
+
+### Restaurar Bancos de Dados
+
+```bash
+# Listar backups disponíveis
+ls -lh ./backups/postgres/
+ls -lh ./backups/neo4j/
+
+# Restaurar PostgreSQL
+make restore-postgres FILE=./backups/postgres/postgres_backup_YYYYMMDD_HHMMSS.sql.gz
+
+# Restaurar Neo4j
+make restore-neo4j FILE=./backups/neo4j/neo4j_backup_YYYYMMDD_HHMMSS.cypher
+```
+
+⚠️ **ATENÇÃO**: O restore irá SOBRESCREVER todos os dados atuais do banco!
+
+## 📊 Observabilidade com Grafana
+
+### Acessar Grafana
+
+1. Abra http://localhost:3001
+2. Login padrão:
+   - **Usuário**: admin
+   - **Senha**: admin
+3. Acesse o dashboard **FriendApp - Overview** para ver:
+   - Request Rate (RPS)
+   - P95 Latency
+   - Error Rate
+   - Request Latency Percentiles
+
+### Métricas Prometheus
+
+Todas as métricas estão disponíveis em:
+- **Gateway Metrics**: http://localhost:3000/metrics
+- **Prometheus UI**: http://localhost:9090
+
+Principais métricas exportadas:
+- `http_requests_total` - Total de requests
+- `http_request_duration_seconds` - Latência de requests
+- `http_errors_total` - Total de erros
+- Métricas padrão do Node.js (CPU, memória, event loop)
 
 ## 🔍 Troubleshooting
 
@@ -332,6 +391,37 @@ curl -X POST http://localhost:3000/api/v1/reputacao/calcular \
   -d '{"user_id":"550e8400-e29b-41d4-a716-446655440000","coerencia":0.8,"reciprocidade":0.7,"feedbacks_positivos":10,"denuncias_validadas":0,"maturity_days":30}'
 ```
 
+## 🔒 Verificação de Segurança
+
+Antes de fazer commit de alterações, verifique que secrets não estão expostos:
+
+```bash
+make check-secrets
+```
+
+Este comando verifica:
+- ✓ .env não está versionado
+- ✓ .env.example existe
+- ✓ .gitignore contém .env
+- ✓ Nenhuma chave privada versionada
+- ⚠️ Possíveis secrets hardcoded no código
+
+## 🔑 JWT & JWKS
+
+O API Gateway agora usa JWT com rotação de chaves (JWKS):
+
+- **Endpoint JWKS**: http://localhost:3000/.well-known/jwks.json
+- **Rotação automática**: A cada 24 horas
+- **Múltiplas chaves**: Mantém até 3 chaves ativas simultaneamente
+
+Para obter um token:
+
+```bash
+curl -X POST http://localhost:3000/api/v1/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{"userId":"550e8400-e29b-41d4-a716-446655440000","email":"test@friendapp.com"}'
+```
+
 ## 📞 Suporte
 
 - **Documentação**: [docs/](./docs/)
@@ -340,4 +430,4 @@ curl -X POST http://localhost:3000/api/v1/reputacao/calcular \
 ---
 
 **Última Atualização:** 15/10/2025  
-**Versão:** 3.1
+**Versão:** 3.2 (Fase 3 - MVP Ready)

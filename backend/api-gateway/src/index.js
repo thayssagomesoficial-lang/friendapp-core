@@ -1,17 +1,41 @@
 const fastify = require('fastify');
 const cors = require('@fastify/cors');
 const rateLimit = require('@fastify/rate-limit');
-const jwt = require('@fastify/jwt');
 const proxy = require('@fastify/http-proxy');
 const { v4: uuidv4 } = require('uuid');
 const promClient = require('prom-client');
+const jwksManager = require('./jwks');
 require('dotenv').config();
+
+const { NodeSDK } = require('@opentelemetry/sdk-node');
+const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
+
+const sdk = new NodeSDK({
+  serviceName: 'api-gateway',
+  instrumentations: [getNodeAutoInstrumentations()]
+});
+
+sdk.start();
 
 const register = new promClient.Register();
 
 const httpRequestDuration = new promClient.Histogram({
   name: 'http_request_duration_seconds',
   help: 'Duration of HTTP requests in seconds',
+  labelNames: ['method', 'route', 'status_code'],
+  registers: [register]
+});
+
+const httpRequestTotal = new promClient.Counter({
+  name: 'http_requests_total',
+  help: 'Total number of HTTP requests',
+  labelNames: ['method', 'route', 'status_code'],
+  registers: [register]
+});
+
+const httpErrorsTotal = new promClient.Counter({
+  name: 'http_errors_total',
+  help: 'Total number of HTTP errors',
   labelNames: ['method', 'route', 'status_code'],
   registers: [register]
 });
@@ -33,24 +57,62 @@ const app = fastify({
   genReqId: () => uuidv4()
 });
 
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3001,http://localhost:8080').split(',');
+
 app.register(cors, {
-  origin: true,
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+      cb(null, true);
+      return;
+    }
+    cb(new Error('Not allowed by CORS'));
+  },
   credentials: true
 });
 
 app.register(rateLimit, {
-  max: parseInt(process.env.RATE_LIMIT_MAX) || 100,
-  timeWindow: parseInt(process.env.RATE_LIMIT_WINDOW) || 60000
-});
-
-app.register(jwt, {
-  secret: process.env.JWT_SECRET || 'friendapp-secret-key-change-in-production'
+  max: async (req, key) => {
+    const routeLimits = {
+      '/api/v1/auth/token': 10,
+      '/api/v1/verificacao': 20,
+      default: parseInt(process.env.RATE_LIMIT_MAX) || 100
+    };
+    
+    for (const [route, limit] of Object.entries(routeLimits)) {
+      if (req.url.startsWith(route)) {
+        return limit;
+      }
+    }
+    return routeLimits.default;
+  },
+  timeWindow: parseInt(process.env.RATE_LIMIT_WINDOW) || 60000,
+  keyGenerator: (req) => {
+    return req.ip + ':' + req.url.split('?')[0];
+  },
+  errorResponseBuilder: (req, context) => {
+    return {
+      statusCode: 429,
+      error: 'Too Many Requests',
+      message: `Rate limit exceeded. Try again in ${Math.ceil(context.ttl / 1000)} seconds.`
+    };
+  }
 });
 
 app.addHook('onRequest', async (request, reply) => {
   const end = httpRequestDuration.startTimer();
+  
+  reply.addHeader('x-request-id', request.id);
+  
   reply.then(() => {
-    end({ method: request.method, route: request.routerPath || request.url, status_code: reply.statusCode });
+    const route = request.routerPath || request.url.split('?')[0];
+    const labels = { method: request.method, route, status_code: reply.statusCode };
+    
+    end(labels);
+    httpRequestTotal.inc(labels);
+    
+    if (reply.statusCode >= 400) {
+      httpErrorsTotal.inc(labels);
+    }
   });
 });
 
@@ -60,17 +122,21 @@ app.addHook('onRequest', async (request, reply) => {
     method: request.method,
     url: request.url,
     ip: request.ip,
-    userAgent: request.headers['user-agent']
+    userAgent: request.headers['user-agent'],
+    correlationId: request.headers['x-correlation-id'] || request.id
   }, 'Incoming request');
 });
 
 app.addHook('onResponse', async (request, reply) => {
+  const duration = reply.getResponseTime();
   request.log.info({
     requestId: request.id,
+    correlationId: request.headers['x-correlation-id'] || request.id,
     method: request.method,
     url: request.url,
     statusCode: reply.statusCode,
-    responseTime: reply.getResponseTime()
+    responseTime: `${duration.toFixed(2)}ms`,
+    userAgent: request.headers['user-agent']
   }, 'Request completed');
 });
 
@@ -124,6 +190,11 @@ app.get('/metrics', async (request, reply) => {
   return register.metrics();
 });
 
+app.get('/.well-known/jwks.json', async (request, reply) => {
+  const keys = await jwksManager.getJWKS();
+  return { keys };
+});
+
 app.post('/api/v1/auth/token', async (request, reply) => {
   const { userId, email } = request.body;
 
@@ -132,8 +203,8 @@ app.post('/api/v1/auth/token', async (request, reply) => {
     return { error: 'userId and email are required' };
   }
 
-  const token = app.jwt.sign(
-    { userId, email },
+  const token = await jwksManager.sign(
+    { userId, email, sub: userId },
     { expiresIn: '24h' }
   );
 
@@ -142,10 +213,17 @@ app.post('/api/v1/auth/token', async (request, reply) => {
 
 app.decorate('authenticate', async function(request, reply) {
   try {
-    await request.jwtVerify();
+    const authHeader = request.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      throw new Error('No token provided');
+    }
+    
+    const token = authHeader.substring(7);
+    const payload = await jwksManager.verify(token);
+    request.user = payload;
   } catch (err) {
     reply.code(401);
-    throw new Error('Unauthorized');
+    throw new Error('Unauthorized: ' + err.message);
   }
 });
 
@@ -191,13 +269,23 @@ app.register(async function(fastify) {
 
 const start = async () => {
   try {
+    await jwksManager.initialize();
+    app.log.info('🔑 JWKS Manager initialized');
+    
     const port = parseInt(process.env.PORT) || 3000;
     await app.listen({ port, host: '0.0.0.0' });
     app.log.info(`API Gateway running on port ${port}`);
+    app.log.info(`📊 Metrics: http://localhost:${port}/metrics`);
+    app.log.info(`🔑 JWKS: http://localhost:${port}/.well-known/jwks.json`);
   } catch (err) {
     app.log.error(err);
     process.exit(1);
   }
 };
+
+process.on('SIGTERM', async () => {
+  await sdk.shutdown();
+  await app.close();
+});
 
 start();
