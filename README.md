@@ -1,10 +1,11 @@
 # FriendApp Core 🌟
 
+[![CI/CD Pipeline](https://github.com/thayssagomesoficial-lang/friendapp-core/actions/workflows/ci.yml/badge.svg)](https://github.com/thayssagomesoficial-lang/friendapp-core/actions/workflows/ci.yml)
 [![Status](https://img.shields.io/badge/status-active_development-brightgreen)]()
 [![Documentation](https://img.shields.io/badge/docs-comprehensive-blue)]()
 [![Modules](https://img.shields.io/badge/modules-17-purple)]()
 [![Architecture](https://img.shields.io/badge/architecture-4_layers-orange)]()
-[![Version](https://img.shields.io/badge/version-3.1-blue)]()
+[![Version](https://img.shields.io/badge/version-3.2-blue)]()
 
 ## 🎯 Visão Geral
 
@@ -355,6 +356,6 @@ Agradecimentos especiais a todos os contribuidores que tornaram este projeto pos
 ---
 
 **Última Atualização:** 15/10/2025  
-**Versão:** 3.1 (17 módulos: 11 verticais + 6 horizontais)  
-**Status:** ✅ Documentação Completa | 🔴 Implementação v3.1 em Preparação  
-**Novidades v3.1:** Selos e Verificações, Segurança Vibracional, Economia e Monetização
+**Versão:** 3.2 (Fase 3 - MVP Ready)  
+**Status:** ✅ Documentação Completa | ✅ Core Operacional | 🚀 Preparado para MVP  
+**Novidades Fase 3:** Persistência de dados, Backup/Restore, Gateway hardening (CORS, rate-limit, JWT/JWKS), Grafana + Dashboards, CI/CD completo com GitHub Actions
