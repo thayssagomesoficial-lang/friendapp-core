@@ -1,8 +1,8 @@
 # Índice Geral da Documentação - FriendApp Core
 
-**Última Atualização:** 17/10/2025  
-**Versão:** 3.0  
-**Total de Módulos:** 14 (11 verticais + 3 horizontais)
+**Ultima Atualizacao:** 04/01/2026  
+**Versao:** 3.1  
+**Total de Modulos:** 18 (15 verticais + 3 horizontais)
 
 ---
 
@@ -29,11 +29,12 @@ friendapp-core/
 │       ├── [Vertical] Sistema de Eventos e Experiências ⭐
 │       ├── [Vertical] Sistema de Locais Parceiros B2B ⭐
 │       ├── [Vertical] Sistema de Conexões Reais (Viagem + Bora) ⭐
-│       ├── [Horizontal] Arquitetura Tecnológica e Infraestrutura ⭐ NOVO
-│       ├── [Horizontal] Inteligência Artificial Operacional ⭐ NOVO
-│       └── [Horizontal] Suporte ao Usuário ⭐ NOVO
+│       ├── [Vertical] Sistema Mostre Seu Talento (MST) ⭐ NOVO
+│       ├── [Horizontal] Arquitetura Tecnologica e Infraestrutura
+│       ├── [Horizontal] Inteligencia Artificial Operacional
+│       └── [Horizontal] Suporte ao Usuario
 └── manuais/
-    └── manuais/ (14 PDFs técnicos originais)
+    └── manuais/ (18 PDFs tecnicos originais)
 ```
 
 ---
@@ -66,20 +67,21 @@ friendapp-core/
 
 #### Módulos Verticais (Funcionalidades Recém Integradas)
 
-| # | Módulo | Arquivo | Linhas | Status |
+| # | Modulo | Arquivo | Linhas | Status |
 |---|--------|---------|--------|--------|
-| 8 | Sistema de Chat e Mensagens Vibracionais | [sistema-chat-vibracional.md](./resumos/sistema-chat-vibracional.md) | 376 | ⭐ MVP Próximo |
-| 9 | Sistema de Eventos, Encontros e Experiências | [sistema-eventos-experiencias.md](./resumos/sistema-eventos-experiencias.md) | 524 | ⭐ Planejado |
-| 10 | Sistema de Locais Parceiros e Experiências Comerciais | [sistema-locais-parceiros.md](./resumos/sistema-locais-parceiros.md) | 561 | ⭐ Planejado |
-| 11 | Sistema de Conexões Reais (Modo Viagem + Bora) | [sistema-conexoes-reais.md](./resumos/sistema-conexoes-reais.md) | 625 | ⭐ Planejado |
+| 8 | Sistema de Chat e Mensagens Vibracionais | [sistema-chat-vibracional.md](./resumos/sistema-chat-vibracional.md) | 376 | ⭐ MVP Proximo |
+| 9 | Sistema de Eventos, Encontros e Experiencias | [sistema-eventos-experiencias.md](./resumos/sistema-eventos-experiencias.md) | 524 | ⭐ Planejado |
+| 10 | Sistema de Locais Parceiros e Experiencias Comerciais | [sistema-locais-parceiros.md](./resumos/sistema-locais-parceiros.md) | 561 | ⭐ Planejado |
+| 11 | Sistema de Conexoes Reais (Modo Viagem + Bora) | [sistema-conexoes-reais.md](./resumos/sistema-conexoes-reais.md) | 625 | ⭐ Planejado |
+| 12 | Sistema Mostre Seu Talento (MST) | [sistema-mostre-seu-talento.md](./resumos/sistema-mostre-seu-talento.md) | 650 | ⭐ NOVO |
 
-#### Módulos Horizontais (Camadas Transversais) ⭐ NOVO
+#### Modulos Horizontais (Camadas Transversais)
 
-| # | Módulo | Arquivo | Linhas | Status |
+| # | Modulo | Arquivo | Linhas | Status |
 |---|--------|---------|--------|--------|
-| 12 | Arquitetura Tecnológica e Infraestrutura | [arquitetura-tecnologica-infraestrutura.md](./resumos/arquitetura-tecnologica-infraestrutura.md) | 417 | ⭐ Base Crítica |
-| 13 | Inteligência Artificial Operacional | [ia-operacional.md](./resumos/ia-operacional.md) | 543 | ⭐ Otimização |
-| 14 | Suporte ao Usuário | [suporte-usuario.md](./resumos/suporte-usuario.md) | 698 | ⭐ Acolhimento |
+| 13 | Arquitetura Tecnologica e Infraestrutura | [arquitetura-tecnologica-infraestrutura.md](./resumos/arquitetura-tecnologica-infraestrutura.md) | 417 | ⭐ Base Critica |
+| 14 | Inteligencia Artificial Operacional | [ia-operacional.md](./resumos/ia-operacional.md) | 543 | ⭐ Otimizacao |
+| 15 | Suporte ao Usuario | [suporte-usuario.md](./resumos/suporte-usuario.md) | 698 | ⭐ Acolhimento |
 
 ---
 
@@ -285,15 +287,16 @@ Todos os 11 módulos verticais dependem da infraestrutura:
 
 ### Por Tema Técnico
 
-#### Inteligência Artificial
-- [IA Aurah Kosmos](./resumos/ia-aurah-kosmos.md) (módulo central - vibracional)
-- [IA Operacional](./resumos/ia-operacional.md) ⭐ (recomendação, performance, segurança, jornada)
+#### Inteligencia Artificial
+- [IA Aurah Kosmos](./resumos/ia-aurah-kosmos.md) (modulo central - vibracional)
+- [IA Operacional](./resumos/ia-operacional.md) (recomendacao, performance, seguranca, jornada)
 - [Teste de Personalidade](./resumos/teste-personalidade-energetica.md) (ML/NLP)
-- [Feed Sensorial](./resumos/feed-sensorial.md) (vetorização)
-- [Chat Vibracional](./resumos/sistema-chat-vibracional.md) (análise de metadados)
+- [Feed Sensorial](./resumos/feed-sensorial.md) (vetorizacao)
+- [Chat Vibracional](./resumos/sistema-chat-vibracional.md) (analise de metadados)
 - [Eventos](./resumos/sistema-eventos-experiencias.md) (curadoria)
 - [Locais Parceiros](./resumos/sistema-locais-parceiros.md) (score vibracional)
-- [Viagem/Bora](./resumos/sistema-conexoes-reais.md) (colisões preditivas)
+- [Viagem/Bora](./resumos/sistema-conexoes-reais.md) (colisoes preditivas)
+- [Mostre Seu Talento](./resumos/sistema-mostre-seu-talento.md) (inferencia multimodal, ImpactScore)
 
 #### Tempo Real & WebSocket
 - [Chat Vibracional](./resumos/sistema-chat-vibracional.md) (E2EE + WebSocket)
@@ -304,9 +307,10 @@ Todos os 11 módulos verticais dependem da infraestrutura:
 - [Jogo da Transmutação](./resumos/jogo-transmutacao.md) (sistema principal)
 - Todos os módulos (missões específicas)
 
-#### B2B & Monetização
+#### B2B & Monetizacao
 - [Locais Parceiros](./resumos/sistema-locais-parceiros.md) (tiers de assinatura)
 - [Eventos](./resumos/sistema-eventos-experiencias.md) (eventos pagos)
+- [Mostre Seu Talento](./resumos/sistema-mostre-seu-talento.md) (doacoes, FriendCoins)
 
 #### Segurança & Compliance
 - [Cadastro Consciente](./resumos/sistema-cadastro.md) (verificação documental)

@@ -37,8 +37,9 @@ FriendApp é uma **plataforma social revolucionária** que utiliza **compatibili
 - 💬 **Chat Vibracional** com E2EE e análise de estados emocionais em tempo real
 - 🎭 **Feed Sensorial** que prioriza ressonância energética sobre popularidade
 - 🗺️ **Mapa de Frequência** com visualização de energia coletiva em tempo real
-- 🎮 **Jogo da Transmutação** que transforma interações em evolução mensurável
-- 🔗 **Conexões Autênticas** baseadas em intenção mútua e compatibilidade vibracional
+- 🎮 **Jogo da Transmutacao** que transforma interacoes em evolucao mensuravel
+- 🔗 **Conexoes Autenticas** baseadas em intencao mutua e compatibilidade vibracional
+- 🎤 **Mostre Seu Talento** plataforma de criacao e descoberta de talentos com IA multimodal (25 camadas)
 
 ---
 
@@ -56,16 +57,17 @@ FriendApp é uma **plataforma social revolucionária** que utiliza **compatibili
 | 6 | Jogo da Transmutação | ✅ Ativo | [Docs](./docs/resumos/jogo-transmutacao.md) |
 | 7 | Mapa de Frequência | ✅ Ativo | [Docs](./docs/resumos/mapa-frequencia.md) |
 
-### Módulos Verticais (Funcionalidades)
+### Modulos Verticais (Funcionalidades)
 
-| # | Módulo | Status | Documentação |
+| # | Modulo | Status | Documentacao |
 |---|--------|--------|--------------|
-| 8 | Sistema de Chat e Mensagens Vibracionais | ⭐ MVP Próximo | [Docs](./docs/resumos/sistema-chat-vibracional.md) |
-| 9 | Sistema de Eventos e Experiências Sociais | ⭐ Planejado | [Docs](./docs/resumos/sistema-eventos-experiencias.md) |
+| 8 | Sistema de Chat e Mensagens Vibracionais | ⭐ MVP Proximo | [Docs](./docs/resumos/sistema-chat-vibracional.md) |
+| 9 | Sistema de Eventos e Experiencias Sociais | ⭐ Planejado | [Docs](./docs/resumos/sistema-eventos-experiencias.md) |
 | 10 | Sistema de Locais Parceiros B2B | ⭐ Planejado | [Docs](./docs/resumos/sistema-locais-parceiros.md) |
-| 11 | Sistema de Conexões Reais (Viagem + Bora) | ⭐ Planejado | [Docs](./docs/resumos/sistema-conexoes-reais.md) |
+| 11 | Sistema de Conexoes Reais (Viagem + Bora) | ⭐ Planejado | [Docs](./docs/resumos/sistema-conexoes-reais.md) |
+| 12 | Sistema Mostre Seu Talento (MST) | ⭐ NOVO | [Docs](./docs/resumos/sistema-mostre-seu-talento.md) |
 
-### Módulos Horizontais de Infraestrutura
+### Modulos Horizontais de Infraestrutura
 
 | # | Módulo | Status | Documentação |
 |---|--------|--------|--------------|
@@ -81,7 +83,7 @@ FriendApp é uma **plataforma social revolucionária** que utiliza **compatibili
 | 16 | Sistema de Segurança Vibracional | ⭐ Proteção | [Docs](./docs/resumos/sistema-seguranca-vibracional.md) |
 | 17 | Sistema Econômico e Monetização | ⭐ Sustentabilidade | [Docs](./docs/resumos/sistema-economia-friendcoins.md) |
 
-**Total:** 17 módulos (11 verticais + 6 horizontais)
+**Total:** 18 modulos (12 verticais + 6 horizontais)
 
 ---
 
