@@ -64,7 +64,6 @@ FriendApp é uma **plataforma social revolucionária** que utiliza **compatibili
 | 9 | Sistema de Eventos e Experiências Sociais | ⭐ Planejado | [Docs](./docs/resumos/sistema-eventos-experiencias.md) |
 | 10 | Sistema de Locais Parceiros B2B | ⭐ Planejado | [Docs](./docs/resumos/sistema-locais-parceiros.md) |
 | 11 | Sistema de Conexões Reais (Viagem + Bora) | ⭐ Planejado | [Docs](./docs/resumos/sistema-conexoes-reais.md) |
-| 12 | Sistema Mostre Seu Talento | ✅ Ativo | /manuais/manuais/Manual_Tecnico_Mostre_Seu_Talento_Friendapp.pdf |
 
 ### Módulos Horizontais de Infraestrutura
 
