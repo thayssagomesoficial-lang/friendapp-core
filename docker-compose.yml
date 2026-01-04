@@ -60,6 +60,7 @@ services:
       SEGURANCA_SERVICE_URL: http://seguranca-vibracional-service:3007
       ECONOMIA_SERVICE_URL: http://economia-service:3008
       ANTIFRAUDE_SERVICE_URL: http://antifraude-service:3009
+      MST_SERVICE_URL: http://mst-service:3010
       JWT_SECRET: ${JWT_SECRET:-friendapp-secret-key-change-in-production}
       RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-100}
       RATE_LIMIT_WINDOW: ${RATE_LIMIT_WINDOW:-60000}
@@ -75,6 +76,8 @@ services:
       economia-service:
         condition: service_healthy
       antifraude-service:
+        condition: service_healthy
+      mst-service:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/health"]
@@ -216,6 +219,36 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3009/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  mst-service:
+    build:
+      context: ./backend/microservices/mst-service
+      dockerfile: Dockerfile
+    ports:
+      - "3010:3010"
+    environment:
+      PORT: 3010
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-friendapp}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-friendapp}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      ECONOMIA_SERVICE_URL: http://economia-service:3008
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID:-}
+      FIREBASE_PRIVATE_KEY: ${FIREBASE_PRIVATE_KEY:-}
+      FIREBASE_CLIENT_EMAIL: ${FIREBASE_CLIENT_EMAIL:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      economia-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3010/health"]
       interval: 10s
       timeout: 5s
       retries: 5
