@@ -150,14 +150,15 @@ app.get('/health', async (request, reply) => {
 });
 
 app.get('/ready', async (request, reply) => {
-  const services = [
-    { name: 'selos', url: process.env.SELOS_SERVICE_URL },
-    { name: 'verificacao', url: process.env.VERIFICACAO_SERVICE_URL },
-    { name: 'reputacao', url: process.env.REPUTACAO_SERVICE_URL },
-    { name: 'seguranca', url: process.env.SEGURANCA_SERVICE_URL },
-    { name: 'economia', url: process.env.ECONOMIA_SERVICE_URL },
-    { name: 'antifraude', url: process.env.ANTIFRAUDE_SERVICE_URL }
-  ];
+    const services = [
+      { name: 'selos', url: process.env.SELOS_SERVICE_URL },
+      { name: 'verificacao', url: process.env.VERIFICACAO_SERVICE_URL },
+      { name: 'reputacao', url: process.env.REPUTACAO_SERVICE_URL },
+      { name: 'seguranca', url: process.env.SEGURANCA_SERVICE_URL },
+      { name: 'economia', url: process.env.ECONOMIA_SERVICE_URL },
+      { name: 'antifraude', url: process.env.ANTIFRAUDE_SERVICE_URL },
+      { name: 'mst', url: process.env.MST_SERVICE_URL }
+    ];
 
   const checks = await Promise.allSettled(
     services.map(async (service) => {
@@ -264,6 +265,12 @@ app.register(async function(fastify) {
     upstream: process.env.ANTIFRAUDE_SERVICE_URL,
     prefix: '/api/v1/antifraude',
     rewritePrefix: '/api/antifraude'
+  });
+
+  fastify.register(proxy, {
+    upstream: process.env.MST_SERVICE_URL,
+    prefix: '/api/v1/mst',
+    rewritePrefix: '/api/mst'
   });
 });
 
